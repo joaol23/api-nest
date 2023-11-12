@@ -7,6 +7,7 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { ConfigModule } from "@nestjs/config";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
     imports: [
@@ -40,6 +41,16 @@ import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
                     strict: true,
                 },
             },
+        }),
+        TypeOrmModule.forRoot({
+            type: "mysql",
+            host: "localhost",
+            port: 3306,
+            username: "teste",
+            password: "password",
+            database: "api",
+            entities: [__dirname + "/**/*.entity{.ts,.js}"],
+            synchronize: process.env.NODE_ENV !== "production",
         }),
     ],
     controllers: [AppController],
