@@ -17,11 +17,11 @@ import { AuthForgetDTO } from "./DTO/auth-forget.dto";
 import { AuthResetDTO } from "./DTO/auth-reset.dto";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "@guards/auth.guard";
-import { User } from "@decorators/user.decorator";
-import { User as UserModel } from "@prisma/client";
+import { UserDecorator } from "@decorators/user.decorator";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { FileService } from "@modules/file/file.service";
 import { join } from "path";
+import { User } from "@modules/user/entity/user.entity";
 
 @Controller("auth")
 export class AuthController {
@@ -39,7 +39,9 @@ export class AuthController {
 
     @Post("register")
     async register(@Body() registerDto: AuthRegisterDTO) {
-        return this.authService.register(registerDto);
+        return {
+            access_token: await this.authService.register(registerDto),
+        };
     }
 
     @Post("forget")
@@ -54,7 +56,7 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post("me")
-    async me(@User() user: UserModel) {
+    async me(@UserDecorator() user: User) {
         return {
             data: user,
         };
@@ -64,7 +66,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post("photo")
     async photo(
-        @User() user: UserModel,
+        @UserDecorator() user: User,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -104,7 +106,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post("photo")
     async photos(
-        @User() user: UserModel,
+        @UserDecorator() user: User,
         @UploadedFiles() files: Express.Multer.File[],
     ) {
         return files;
