@@ -47,12 +47,16 @@ export class AuthController {
 
     @Post("forget")
     async forget(@Body() { email }: AuthForgetDTO) {
-        return this.authService.forget(email);
+        return {
+            success: await this.authService.forget(email),
+        };
     }
 
     @Post("reset")
     async reset(@Body() { password, token }: AuthResetDTO) {
-        return this.authService.resetPassword(password, token);
+        return {
+            access_token: await this.authService.resetPassword(password, token),
+        };
     }
 
     @UseGuards(AuthGuard)
@@ -84,7 +88,10 @@ export class AuthController {
         photo: Express.Multer.File,
     ) {
         try {
-            const pathNewFile = await this.fileService.upload(photo, `photo-${user.id}.png`);
+            const pathNewFile = await this.fileService.upload(
+                photo,
+                `photo-${user.id}.png`,
+            );
 
             return {
                 success: true,
