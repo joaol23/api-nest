@@ -18,7 +18,7 @@ describe("Files", () => {
     });
 
     test("Teste do method de upload", async () => {
-        const path = fileService.upload(await getPhoto(), "tets.png");
+        const path = await fileService.upload(await getPhoto(), "tets.png");
         expect(path).toContain("tets.png");
     });
 });
