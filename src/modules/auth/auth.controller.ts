@@ -6,6 +6,7 @@ import {
     MaxFileSizeValidator,
     ParseFilePipe,
     Post,
+    Req,
     UploadedFile,
     UploadedFiles,
     UseGuards,
@@ -56,9 +57,10 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post("me")
-    async me(@UserDecorator() user: User) {
+    async me(@UserDecorator() user: User, @Req() {tokenPayload}: any) {
         return {
             data: user,
+            tokenPayload
         };
     }
 

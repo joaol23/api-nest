@@ -45,7 +45,6 @@ export class AuthService {
         id: number;
     } {
         try {
-            console.log(token);
             const dataUser = this.jwtService.verify(token, {
                 audience: this.audience,
                 issuer: this.issuer,
@@ -66,9 +65,7 @@ export class AuthService {
     }
 
     async login(email: string, password: string) {
-        console.log(email);
-        const user = await this.usersRepository.findOneBy({ email });
-        console.log(user);
+        const user = await this.usersRepository.findOneByOrFail({ email });
 
         if (!user) {
             throw new UnauthorizedException("E-mail e/ou senha incorretos.");
@@ -81,8 +78,8 @@ export class AuthService {
         return await this.createToken(user);
     }
 
-    async forget(email: string) {
-        const user = await this.usersRepository.findOneBy({ email });
+    async forget(email: string): Promise<boolean> {
+        const user = await this.usersRepository.findOneByOrFail({ email });
 
         if (!user) {
             throw new UnauthorizedException("E-mail está incorreto.");
@@ -99,7 +96,6 @@ export class AuthService {
                 audience: "users",
             },
         );
-
         await this.mailer.sendMail({
             subject: "Recuperação de Senha",
             to: "teste@hcode.com",
@@ -132,6 +128,8 @@ export class AuthService {
     }
 
     async register(registerDto: AuthRegisterDTO) {
+        delete registerDto.role;
+
         const newUser = await this.userService.create(registerDto);
         return await this.createToken(newUser);
     }
