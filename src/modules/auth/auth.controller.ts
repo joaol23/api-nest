@@ -57,10 +57,10 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post("me")
-    async me(@UserDecorator() user: User, @Req() {tokenPayload}: any) {
+    async me(@UserDecorator() user: User, @Req() { tokenPayload }: any) {
         return {
             data: user,
-            tokenPayload
+            tokenPayload,
         };
     }
 
@@ -84,16 +84,7 @@ export class AuthController {
         photo: Express.Multer.File,
     ) {
         try {
-            const pathNewFile = join(
-                __dirname,
-                "..",
-                "..",
-                "..",
-                "storage",
-                "photos",
-                `photo-${user.id}.png`,
-            );
-            await this.fileService.upload(photo, pathNewFile);
+            const pathNewFile = await this.fileService.upload(photo, `photo-${user.id}.png`);
 
             return {
                 success: true,
