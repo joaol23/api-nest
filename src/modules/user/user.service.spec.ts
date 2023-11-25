@@ -9,6 +9,7 @@ import { User } from "./entity/user.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { UpdateUserDto } from "./DTO/UpdateUserDto";
 import { PatchUserDto } from "./DTO/PatchUserDto";
+import { createUserDto } from "@/testing/create-user-dto.mock";
 
 describe("UserService", () => {
     let userService: UserService;
@@ -32,15 +33,7 @@ describe("UserService", () => {
         test("method create", async () => {
             jest.spyOn(userRepository, "exist").mockResolvedValueOnce(false);
 
-            const data: CreateUserDto = {
-                birthAt: "2000-01-01",
-                email: "test@example.com",
-                name: "John Smith",
-                password: "123456",
-                role: Role.Admin,
-            };
-
-            const result = await userService.create(data);
+            const result = await userService.create(createUserDto);
             expect(result).toEqual(userEntityList[0]);
         });
     });

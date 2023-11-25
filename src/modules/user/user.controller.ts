@@ -14,7 +14,7 @@ import { PatchUserDto } from "./DTO/PatchUserDto";
 import { UserService } from "./user.service";
 import { ParamIdNumberDecorator } from "@decorators/param-id-number.decorator";
 import { Roles } from "@decorators/role.decorator";
-import { Role } from "src/enums/role.enum";
+import { Role } from "@/enums/role.enum";
 import { RoleGuard } from "@guards/role.guard";
 import { AuthGuard } from "@guards/auth.guard";
 
@@ -85,6 +85,8 @@ export class UserController {
         @ParamIdNumberDecorator()
         id: number,
     ) {
-        return this.userService.delete(id);
+        return {
+            success: await this.userService.delete(id),
+        };
     }
 }
