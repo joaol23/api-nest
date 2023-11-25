@@ -46,9 +46,7 @@ export class UserService {
     }
 
     async show(id: number): Promise<User> {
-        console.log('oi');
         await this.exists(id);
-        console.log('oi2');
         return await this.usersRepository.findOneByOrFail({ id });
     }
 
