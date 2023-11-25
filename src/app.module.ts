@@ -11,7 +11,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            envFilePath: process.env.ENV === "test" ? '.env.test': '.env'
+        }),
         ThrottlerModule.forRoot({
             throttlers: [
                 {
@@ -48,7 +50,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
             port: 3306,
             username: "teste",
             password: "password",
-            database: "api",
+            database: process.env.DBNAME,
             entities: [__dirname + "/**/*.entity{.ts,.js}"],
             synchronize: process.env.NODE_ENV !== "production",
         }),

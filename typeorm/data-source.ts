@@ -1,4 +1,9 @@
+import { config } from "dotenv";
 import { DataSource } from "typeorm";
+
+config({
+    path: process.env.ENV === "test" ? '.env.test': '.env'
+});
 
 const dataSource = new DataSource({
     type: "mysql",
@@ -6,7 +11,7 @@ const dataSource = new DataSource({
     port: 3306,
     username: "teste",
     password: "password",
-    database: "api",
+    database: process.env.DBNAME,
     migrations: [`${__dirname}/migrations/**/*.js`]
 });
 
